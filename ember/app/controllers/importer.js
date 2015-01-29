@@ -44,7 +44,7 @@ export default Ember.Controller.extend({
           continue;  
         }
         
-        entryDate = moment(line);
+        entryDate = moment(line, 'YYYY-MM-DD', true);
         if (entryDate.isValid()) {
           if (currentEntry) {
             currentEntry.text = $.trim(currentEntry.text);
@@ -55,16 +55,29 @@ export default Ember.Controller.extend({
             date: entryDate.utc().toDate(),
             text: ""
           };
+
+          // DailyDiary text exports are formatted as such:
+          // 2015-01-01
+          // 22:00
+          //
+          // Rest of entry...
+          //
+          // So if the next line is a time, skip it to support DailyDiary exports.
+          if (moment(lines[i+1], 'HH:mm', true).isValid()) {
+            i++;
+          }
         } else {
           if (currentEntry) {
             currentEntry.text = currentEntry.text + line + "\n";
           }
         }
+      }
 
-        if (typeof lines[i+1] === 'undefined' && currentEntry) {
-          currentEntry.text = $.trim(currentEntry.text);
-          entries.push(currentEntry);
-        }
+      // ran out of lines, need to handle the last entry
+      // this must happen even if the last line was a newline
+      if (currentEntry) {
+        currentEntry.text = $.trim(currentEntry.text);
+        entries.push(currentEntry);
       }
 
       this.set('entryCount', entries.length);

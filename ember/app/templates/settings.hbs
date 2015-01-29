@@ -50,6 +50,14 @@
           {{view "users/email-time" day="sunday" emailTimes=emailTimes}}
         </div>
 
+        <br />
+        <div class="checkbox">
+          <label>
+            {{input checked=session.currentUser.includeEmailMemory type="checkbox" class="form-control"}} Include a previous entry in my reminder emails
+          </label>
+        </div>        
+        <br />
+
         <button {{action "saveEmailSettings"}} {{bind-attr class=":btn :btn-primary saving:disabled"}} {{bind-attr disabled=saving}}>Save Email Settings</button>
       </div>
 
@@ -61,6 +69,17 @@
         
         <div>
           <button {{action "export"}} {{bind-attr class=":btn :btn-primary exporting:disabled"}} {{bind-attr disabled=exporting}}>Export</button>
+        </div>
+      </div>
+
+      <div class='d-section'>
+        <h2>
+          Reset Entries
+          <small class='d-subheader'>Click the button below to permanently remove all of your entries.</small>
+        </h2>
+        
+        <div>
+          <button {{action "delete"}} {{bind-attr class=":btn :btn-primary deleting:disabled"}} {{bind-attr disabled=deleting}}>Delete All Entries</button>
         </div>
       </div>
 
